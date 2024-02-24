@@ -15,11 +15,11 @@ public class Background : MonoBehaviour
   private List<GameObject> planes = new();
 
   [Range(0.0f, 0.1f)]
-  public float backgroundScrollRate = 0.01f;
+  public float backgroundScrollRate = -30f;
   [Range(0.0f, 0.1f)]
-  public float midgroundScrollRate = 0.02f;
+  public float midgroundScrollRate = -20f;
   [Range(0.0f, 0.1f)]
-  public float foregroundScrollRate = 0.03f;
+  public float foregroundScrollRate = -1f;
 
   void Start()
   {
@@ -38,9 +38,9 @@ public class Background : MonoBehaviour
     midgroundPlane.transform.position = new Vector3(targetCamera.transform.position.x, 0.01f, targetCamera.transform.position.z);
     foregroundPlane.transform.position = new Vector3(targetCamera.transform.position.x, 0.02f, targetCamera.transform.position.z);
 
-    backgroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(6, 6));
-    midgroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(4, 4));
-    foregroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(2, 2));
+    backgroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(30, 30));
+    midgroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(20, 20));
+    foregroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(10, 10));
 
     backgroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * -backgroundScrollRate, targetCamera.transform.position.z * -backgroundScrollRate));
     midgroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * -midgroundScrollRate, targetCamera.transform.position.z * -midgroundScrollRate));
@@ -51,6 +51,7 @@ public class Background : MonoBehaviour
   {
     // Create plane.
     GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+    plane.transform.localScale = new Vector3(10, 1, 10);
 
     // Create material.
     Material material = new(Shader.Find("Unlit/Transparent"))

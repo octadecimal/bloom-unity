@@ -44,10 +44,10 @@ public class PlayerController : MonoBehaviour
     // float thrustMultiplier = 1.0f;
 
     // Add to acceleration.
-    acceleration += moveInput.sqrMagnitude * thrustMultiplier + (5f * lookInput);
+    acceleration += moveInput.sqrMagnitude * thrustMultiplier + (50f * lookInput);
 
     // Move forward.
-    float speed = acceleration * 0.025f;
+    float speed = acceleration * 0.0015f;
     gameObject.transform.position += gameObject.transform.forward * speed * Time.deltaTime;
 
     // Friction.
