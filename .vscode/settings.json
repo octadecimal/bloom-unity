@@ -61,9 +61,6 @@
     "temp/": true,
     "Temp/": true
   },
-  "dotnet.defaultSolution": "bloom.sln",
-  "hide-files.files": [],
-  "cSpell.words": [
-    "midground"
-  ]
+  "dotnet.defaultSolution": "Bloom.sln",
+  "hide-files.files": []
 }

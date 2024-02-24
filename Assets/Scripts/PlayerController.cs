@@ -14,10 +14,6 @@ public class PlayerController : MonoBehaviour
     moveAction = inputActions.FindAction("Move");
   }
 
-  private void FixedUpdate()
-  {
-  }
-
   private void Update()
   {
     // Read MOVE action.
@@ -37,7 +33,8 @@ public class PlayerController : MonoBehaviour
     float angleDistance = 1f - (Quaternion.Angle(gameObject.transform.rotation, targetRotation) / 180f);
 
     // Get angular thrust multiplier.
-    float thrustMultiplier = Mathf.Pow(angleDistance, 2);
+    // float thrustMultiplier = Mathf.Pow(angleDistance, 1.00f);
+    float thrustMultiplier = 1.0f;
 
     // Move forward.
     float acceleration = 1f * thrustMultiplier * moveInput.sqrMagnitude;
