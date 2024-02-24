@@ -30,14 +30,17 @@ public class Background : MonoBehaviour
 
     void Update()
     {
-        foreach (GameObject plane in planes)
-        {
-            plane.transform.position = new Vector3(targetCamera.transform.position.x, 0, targetCamera.transform.position.z);
-        }
+        backgroundPlane.transform.position = new Vector3(targetCamera.transform.position.x, 0, targetCamera.transform.position.z);
+        midgroundPlane.transform.position = new Vector3(targetCamera.transform.position.x, 0.01f, targetCamera.transform.position.z);
+        foregroundPlane.transform.position = new Vector3(targetCamera.transform.position.x, 0.02f, targetCamera.transform.position.z);
 
-        backgroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * backgroundScrollRate, targetCamera.transform.position.z * backgroundScrollRate));
-        midgroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * midgroundScrollRate, targetCamera.transform.position.z * midgroundScrollRate));
-        foregroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * foregroundScrollRate, targetCamera.transform.position.z * foregroundScrollRate));
+        backgroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(2, 2));
+        midgroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(2, 2));
+        foregroundPlane.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(2, 2));
+
+        backgroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * -backgroundScrollRate, targetCamera.transform.position.z * -backgroundScrollRate));
+        midgroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * -midgroundScrollRate, targetCamera.transform.position.z * -midgroundScrollRate));
+        foregroundPlane.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", new Vector2(targetCamera.transform.position.x * -foregroundScrollRate, targetCamera.transform.position.z * -foregroundScrollRate));
     }
 
     GameObject CreatePlane(Texture2D texture)
