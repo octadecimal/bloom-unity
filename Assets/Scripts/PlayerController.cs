@@ -6,18 +6,25 @@ public class PlayerController : MonoBehaviour
   public InputActionAsset inputActions;
 
   private InputAction moveAction;
+  private InputAction lookAction;
 
   private Quaternion targetRotation;
 
+  private float acceleration;
+
   private void Start()
   {
+    acceleration = 0.0f;
+
     moveAction = inputActions.FindAction("Move");
+    lookAction = inputActions.FindAction("Interact");
   }
 
   private void Update()
   {
     // Read MOVE action.
     Vector2 moveInput = moveAction.ReadValue<Vector2>();
+    float lookInput = lookAction.ReadValue<float>();
 
     // Adjust target rotation.
     if (moveInput.sqrMagnitude > 0.01f)
@@ -27,17 +34,23 @@ public class PlayerController : MonoBehaviour
     }
 
     // Lerp rotation towards target rotation.
-    gameObject.transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, targetRotation, 0.0025f);
+    gameObject.transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, targetRotation, 0.0075f);
 
     // Get distance from target rotation.
     float angleDistance = 1f - (Quaternion.Angle(gameObject.transform.rotation, targetRotation) / 180f);
 
     // Get angular thrust multiplier.
-    // float thrustMultiplier = Mathf.Pow(angleDistance, 1.00f);
-    float thrustMultiplier = 1.0f;
+    float thrustMultiplier = Mathf.Pow(angleDistance, 3f);
+    // float thrustMultiplier = 1.0f;
+
+    // Add to acceleration.
+    acceleration += moveInput.sqrMagnitude * thrustMultiplier + (5f * lookInput);
 
     // Move forward.
-    float acceleration = 1f * thrustMultiplier * moveInput.sqrMagnitude;
-    gameObject.transform.position += gameObject.transform.forward * acceleration * Time.deltaTime;
+    float speed = acceleration * 0.025f;
+    gameObject.transform.position += gameObject.transform.forward * speed * Time.deltaTime;
+
+    // Friction.
+    acceleration *= 0.995f;
   }
 }
