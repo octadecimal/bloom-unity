@@ -52,5 +52,8 @@ public class PlayerController : MonoBehaviour
 
     // Friction.
     acceleration *= 0.995f;
+
+    HexUtils.HexCoordinates hex = HexUtils.WorldToHex(gameObject.transform.position);
+    Debug.Log(hex.r + "," + hex.q);
   }
 }
