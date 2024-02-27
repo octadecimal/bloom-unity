@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HexUtils : MonoBehaviour
 {
-  public static float hexSize = 2.0f; // Size of the hex from center to corner
+  public static float hexSize = 1.0f; // Size of the hex from center to corner
 
   public struct HexCoordinates
   {

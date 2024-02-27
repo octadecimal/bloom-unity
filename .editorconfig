@@ -1,0 +1,10 @@
+[*.{cs,vb}]
+
+# IDE0017: Simplify object initialization
+dotnet_style_object_initializer = false
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_event = false
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_event = false
