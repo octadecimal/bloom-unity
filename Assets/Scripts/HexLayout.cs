@@ -27,12 +27,13 @@ public class HexLayout : MonoBehaviour
   private void LayoutGrid()
   {
 
-    for (int y = 0; y < gridSize.y; y++)
+    for (int y = -gridSize.y; y <= gridSize.y; y++)
     {
-      for (int x = 0; x < gridSize.x; x++)
+      for (int x = -gridSize.x; x <= gridSize.x; x++)
       {
         GameObject tile = new($"Hex {x},{y}", typeof(HexRenderer));
-        tile.transform.position = HexUtils.HexToWorld(new Vector2Int(x, y));
+        tile.transform.position = Hex.ToWorld(x, y);
+        // tile.transform.position = HexUtils.HexToWorld(new Vector2Int(x, y));
         // tile.transform.position = HexUtils2.HexToWorld(x, y);
         tile.transform.SetParent(this.transform, true);
 

@@ -1,132 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public static class HexVectorExtensions
 {
-
-  public static Vector2 WorldToPlanar(this Vector3 world)
-  {
-    return new Vector2(world.x, world.z);
-  }
-
-  public static Vector3 PlanarToWorld(this Vector2 planar, float y = 0f)
-  {
-    return new Vector3(planar.x, y, planar.y);
-  }
-
   public static Hex ToHex(this Vector3 world)
   {
     return Hex.FromWorld(world);
   }
-
-  public static Hex ToHex(this Vector2 planar)
-  {
-    return Hex.FromPlanar(planar);
-  }
-
 }
 
 [System.Serializable]
 public struct Hex
 {
-
-  public static float RADIUS = 0.5f;
-  public static Vector2 Q_BASIS = new Vector2(2f, 0) * RADIUS;
-  public static Vector2 R_BASIS = new Vector2(1f, Mathf.Sqrt(3)) * RADIUS;
-  public static Vector2 Q_INV = new Vector2(1f / 2, -Mathf.Sqrt(3) / 6);
-  public static Vector2 R_INV = new Vector2(0, Mathf.Sqrt(3) / 3);
-
-  public static Hex[] AXIAL_DIRECTIONS = new Hex[] {
-        new Hex(1, 0),      // 0
-        new Hex(0, 1),      // 1
-        new Hex(-1, 1),     // 2
-        new Hex(-1, 0),     // 3
-        new Hex(0, -1),     // 4
-        new Hex(1, -1),     // 5
-    };
-
-  public static Hex FromPlanar(Vector2 planar)
-  {
-    float q = Vector2.Dot(planar, Q_INV) / RADIUS;
-    float r = Vector2.Dot(planar, R_INV) / RADIUS;
-    return new Hex(q, r);
-  }
-
-  public static Hex FromWorld(Vector3 world)
-  {
-    return FromPlanar(world.WorldToPlanar());
-  }
-
-  public static Hex operator +(Hex a, Hex b)
-  {
-    return new Hex(a.q + b.q, a.r + b.r);
-  }
-
-  public static Hex operator -(Hex a, Hex b)
-  {
-    return new Hex(a.q - b.q, a.r - b.r);
-  }
-
-  public static Hex zero = new Hex(0, 0);
-
-  public static IEnumerable<Hex> Ring(Hex center, int radius)
-  {
-    Hex current = center + new Hex(0, -radius);
-    foreach (Hex dir in AXIAL_DIRECTIONS)
-    {
-      for (int i = 0; i < radius; i++)
-      {
-        yield return current;
-        current = current + dir;
-      }
-    }
-  }
-
-  public static IEnumerable<Hex> Spiral(Hex center, int minRadius, int maxRadius)
-  {
-    if (minRadius == 0)
-    {
-      yield return center;
-      minRadius += 1;
-    }
-    for (int r = minRadius; r <= maxRadius; r++)
-    {
-      var ring = Ring(center, r);
-      foreach (Hex hex in ring)
-      {
-        yield return hex;
-      }
-    }
-  }
-
-  public static IEnumerable<Hex> FloodFill(IEnumerable<Hex> startFrom)
-  {
-    HashSet<Hex> visited = new HashSet<Hex>();
-    Queue<Hex> frontier = new Queue<Hex>(startFrom);
-    while (frontier.Count > 0)
-    {
-      Hex current = frontier.Dequeue();
-      yield return current;
-      foreach (Hex next in current.Neighbors())
-      {
-        if (visited.Contains(next))
-        {
-          continue;
-        }
-        visited.Add(next);
-        frontier.Enqueue(next);
-      }
-    }
-  }
+  public const float SIZE = 1.0f;
 
   public int q;
   public int r;
-
-  public Hex(float q, float r) : this(Mathf.RoundToInt(q), Mathf.RoundToInt(r))
-  {
-  }
 
   public Hex(int q, int r)
   {
@@ -134,51 +22,52 @@ public struct Hex
     this.r = r;
   }
 
-  public Vector2 ToPlanar()
+  public Hex(float q, float r) : this(Mathf.RoundToInt(q), Mathf.RoundToInt(r))
   {
-    return Q_BASIS * q + R_BASIS * r;
   }
 
-  public Vector3 ToWorld(float y = 0f)
+  public static Hex FromWorld(Vector3 world)
   {
-    return ToPlanar().PlanarToWorld(y);
+    float x = world.x;
+    float z = world.z;
+    float q = 2f / 3f * x / SIZE;
+    float r = (-1f / 3f * x + Mathf.Sqrt(3f) / 3f * z) / SIZE;
+
+    return Round(q, r);
   }
 
-  public IEnumerable<Hex> Neighbors()
+  public static Vector3 ToWorld(int q, int r, float y = 0)
   {
-    foreach (Hex dir in AXIAL_DIRECTIONS)
-    {
-      yield return this + dir;
-    }
+    float x = SIZE * 3 / 2 * q;
+    float z = SIZE * Mathf.Sqrt(3f) * (r + 0.5f * (q & 1));
+
+    return new Vector3(x, y, z);
   }
 
-  public Hex GetNeighbor(int dir)
+  public readonly Vector3 ToWorld(Hex hex, float y = 0)
   {
-    Hex incr = AXIAL_DIRECTIONS[dir % AXIAL_DIRECTIONS.Length];
-    return this + incr;
+    return ToWorld(q, r, y);
   }
 
-  public int DistanceTo(Hex to)
+  private static Hex Round(float q, float r)
   {
-    return (Mathf.Abs(q - to.q)
-      + Mathf.Abs(q + r - to.q - to.r)
-      + Mathf.Abs(r - to.r)) / 2;
-  }
+    float x = q;
+    float z = r;
+    float y = -x - z;
 
-  public override bool Equals(System.Object obj)
-  {
-    Hex hex = (Hex)obj;
-    return (q == hex.q) && (r == hex.r);
-  }
+    int rx = Mathf.RoundToInt(x);
+    int ry = Mathf.RoundToInt(y);
+    int rz = Mathf.RoundToInt(z);
 
-  public override int GetHashCode()
-  {
-    return 23 + 31 * q + 37 * r;
-  }
+    float xDiff = Mathf.Abs(rx - x);
+    float yDiff = Mathf.Abs(ry - y);
+    float zDiff = Mathf.Abs(rz - z);
 
-  public override string ToString()
-  {
-    return "(" + q + ";" + r + ")";
-  }
+    if (xDiff > yDiff && xDiff > zDiff)
+      rx = -ry - rz;
+    else if (yDiff > zDiff)
+      ry = -rx - rz;
 
+    return new Hex(rx, ry + (rx - (rx & 1)) / 2);
+  }
 }

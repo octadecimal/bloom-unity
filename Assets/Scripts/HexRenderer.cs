@@ -26,8 +26,8 @@ public class HexRenderer : MonoBehaviour
   private List<Face> _faces;
 
   public Material material;
-  public float innerSize = 0.98f;
-  public float outerSize = 1.02f;
+  public float innerSize = 0.99f;
+  public float outerSize = 1.01f;
   public float height = 1.0f;
 
   public void DrawMesh()
