@@ -10,18 +10,26 @@ public class HexLayout : MonoBehaviour
   [Header("Tile Settings")]
   public Material material;
 
+  public Camera targetCamera;
 
-  private void OnEnable()
+
+  private void Awake()
   {
     LayoutGrid();
   }
 
-  private void OnValidate()
+  private void Update()
   {
-    if (Application.isPlaying)
-    {
-      LayoutGrid();
-    }
+    int abs_x = (int)targetCamera.transform.position.x;
+    int abs_z = (int)targetCamera.transform.position.z;
+
+    float x = abs_x * 3f;
+    float z = abs_z * Mathf.Sqrt(3);
+
+    var cameraHex = Hex.FromWorld(targetCamera.transform.position);
+    var cameraPos = Hex.ToWorld(cameraHex.q, cameraHex.r);
+
+    gameObject.transform.position = new Vector3(cameraPos.x, 0, -cameraPos.z);
   }
 
   private void LayoutGrid()
@@ -45,33 +53,5 @@ public class HexLayout : MonoBehaviour
 
       }
     }
-  }
-
-  private Vector3 HexToWorldInternal(Vector2Int coordinate)
-  {
-    int col = coordinate.x;
-    int row = coordinate.y;
-    float width;
-    float height;
-    float xPos;
-    float yPos;
-    bool shouldOffset;
-    float horizontalDistance;
-    float verticalDistance;
-    float offset;
-    float size = 1.0f;
-
-    shouldOffset = (col % 2) == 0;
-    width = 2f * size;
-    height = Mathf.Sqrt(3f) * size;
-
-    horizontalDistance = width * (3f / 4f);
-    verticalDistance = height;
-    offset = shouldOffset ? height / 2f : 0;
-
-    xPos = col * horizontalDistance;
-    yPos = (row * verticalDistance) - offset;
-
-    return new Vector3(xPos, 0, -yPos);
   }
 }

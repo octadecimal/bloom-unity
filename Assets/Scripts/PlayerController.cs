@@ -54,6 +54,6 @@ public class PlayerController : MonoBehaviour
     acceleration *= 0.995f;
 
     Hex hex = Hex.FromWorld(gameObject.transform.position);
-    Debug.Log(hex.q + "," + hex.r);
+    // Debug.Log(hex.q + "," + hex.r);
   }
 }

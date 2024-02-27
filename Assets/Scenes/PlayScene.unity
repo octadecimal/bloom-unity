@@ -461,7 +461,7 @@ Transform:
   m_GameObject: {fileID: 440497885}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: 5}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -867,6 +867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSize: {x: 10, y: 10}
   material: {fileID: 2100000, guid: 63e2d7c799744d04480fa6b534065043, type: 2}
+  targetCamera: {fileID: 330585545}
 --- !u!4 &1171393409
 Transform:
   m_ObjectHideFlags: 0
@@ -899,7 +900,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!135 &1559903275
 SphereCollider:
@@ -984,7 +985,7 @@ Transform:
   m_GameObject: {fileID: 1559903274}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.57, y: -0.5, z: 14.82}
+  m_LocalPosition: {x: -5.57, y: 0.5, z: 14.82}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
