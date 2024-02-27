@@ -575,7 +575,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &716556996
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -866,8 +866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 10, y: 10}
-  material: {fileID: -7791486788655378091, guid: 1b4b6e8d3002e414e9650f7267fe1220,
-    type: 3}
+  material: {fileID: 2100000, guid: 63e2d7c799744d04480fa6b534065043, type: 2}
 --- !u!4 &1171393409
 Transform:
   m_ObjectHideFlags: 0

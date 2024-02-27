@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
   {
     float crouchInput = crouchAction.ReadValue<float>();
 
-    Vector3 targetY = new Vector3(0f, crouchInput > 0 ? 36f : 12f, 0f);
+    Vector3 targetY = new Vector3(0f, crouchInput > 0 ? 36f : 11f, 0f);
 
     // Lerp
     currentY = Vector3.Lerp(currentY, targetY, 0.01f);
