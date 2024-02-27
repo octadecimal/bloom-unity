@@ -1,62 +1,74 @@
 using UnityEngine;
 
-public class HexUtils : MonoBehaviour
+public static class HexUtils
 {
-  public static float hexSize = 1.0f; // Size of the hex from center to corner
+  public const float hexSize = 1.0f;
 
-  public struct HexCoordinates
+  public static Vector3 HexToWorld(Vector2Int hexPosition)
   {
-    public int q; // Column
-    public int r; // Row
-
-    public HexCoordinates(int q, int r)
-    {
-      this.q = q;
-      this.r = r;
-    }
-  }
-
-  // Convert a world position to hex coordinates
-  public static HexCoordinates WorldToHex(Vector3 worldPosition)
-  {
-    float q = (Mathf.Sqrt(3f) / 3f * worldPosition.x - 1f / 3f * worldPosition.z) / hexSize;
-    float r = (2f / 3f * worldPosition.z) / hexSize;
-
-    return CubeToAxial(RoundCubeCoordinate(q, -q - r, r));
-  }
-
-  // Convert hex coordinates to a world position
-  public static Vector3 HexToWorld(HexCoordinates hexCoords)
-  {
-    float x = hexSize * (Mathf.Sqrt(3f) * hexCoords.q + Mathf.Sqrt(3f) / 2f * hexCoords.r);
-    float z = hexSize * (3f / 2f * hexCoords.r);
+    float x = hexSize * 3 / 2 * hexPosition.x;
+    float z = hexSize * Mathf.Sqrt(3f) * (hexPosition.y + 0.5f * (hexPosition.x & 1));
     return new Vector3(x, 0, z);
   }
 
-  private static HexCoordinates CubeToAxial(Vector3Int cubeCoord)
+  public static Vector2Int WorldToHex(Vector3 worldPosition)
   {
-    int q = cubeCoord.x;
-    int r = cubeCoord.z;
-    return new HexCoordinates(q, r);
+    float x = worldPosition.x;
+    float z = worldPosition.z;
+
+    // Convert from world space to hex space
+    float q = (2f / 3f * x) / hexSize;
+    float r = (-1f / 3f * x + Mathf.Sqrt(3f) / 3f * z) / hexSize;
+
+    // Round to the nearest hex coordinate
+    return HexRound(q, r);
+    // return Round2(new Vector2(q, r));
   }
 
-  private static Vector3Int RoundCubeCoordinate(float q, float r, float s)
+  public static Vector2Int Round2(Vector2 frac)
   {
-    int rx = Mathf.RoundToInt(q);
-    int ry = Mathf.RoundToInt(r);
-    int rz = Mathf.RoundToInt(s);
+    float q = Mathf.Round(frac.x);
+    float r = Mathf.Round(frac.y);
+    float s = Mathf.Round(-q - r);
 
-    float x_diff = Mathf.Abs(rx - q);
-    float y_diff = Mathf.Abs(ry - r);
-    float z_diff = Mathf.Abs(rz - s);
+    float q_diff = Mathf.Abs(q - frac.x);
+    float r_diff = Mathf.Abs(r - frac.y);
+    float s_diff = Mathf.Abs(s - (-q - r));
 
-    if (x_diff > y_diff && x_diff > z_diff)
+    if (q_diff > r_diff && q_diff > s_diff)
+      q = -r - s;
+    else if (r_diff > s_diff)
+      r = -q - s;
+    else
+      s = -q - r;
+
+    return new Vector2Int(Mathf.RoundToInt(q), Mathf.RoundToInt(r));
+  }
+
+  private static Vector2Int HexRound(float q, float r)
+  {
+    float x = q;
+    float z = r;
+    float y = -x - z;
+
+    int rx = Mathf.RoundToInt(x);
+    int ry = Mathf.RoundToInt(y);
+    int rz = Mathf.RoundToInt(z);
+
+    float xDiff = Mathf.Abs(rx - x);
+    float yDiff = Mathf.Abs(ry - y);
+    float zDiff = Mathf.Abs(rz - z);
+
+    if (xDiff > yDiff && xDiff > zDiff)
       rx = -ry - rz;
-    else if (y_diff > z_diff)
+    else if (yDiff > zDiff)
       ry = -rx - rz;
     else
       rz = -rx - ry;
 
-    return new Vector3Int(rx, ry, rz);
+    int col = rx;
+    int row = ry + (rx - (rx & 1)) / 2;
+
+    return new Vector2Int(col, row);
   }
 }
