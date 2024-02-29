@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 637c1bda28f2ea647b1cbc095723e265
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - targetCamera: {instanceID: 0}
+  - backgroundTexture: {fileID: 2800000, guid: 77f90fbd2b147dc4ca312c9f5339d1d1, type: 3}
+  - midgroundTexture: {instanceID: 0}
+  - foregroundTexture: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
