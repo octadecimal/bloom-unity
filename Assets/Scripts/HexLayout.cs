@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEditor;
-using UnityEngine.UIElements;
 
 public class HexLayout : MonoBehaviour
 {
@@ -20,29 +18,21 @@ public class HexLayout : MonoBehaviour
 
   private void Update()
   {
-    int abs_x = (int)targetCamera.transform.position.x;
-    int abs_z = (int)targetCamera.transform.position.z;
-
-    float x = abs_x * 3f;
-    float z = abs_z * Mathf.Sqrt(3);
-
     var cameraHex = Hex.FromWorld(targetCamera.transform.position);
     var cameraPos = Hex.ToWorld(cameraHex.q, cameraHex.r);
 
-    gameObject.transform.position = new Vector3(cameraPos.x, 0, -cameraPos.z);
+    gameObject.transform.position = new Vector3(cameraPos.x, -0.5f, -cameraPos.z);
   }
 
   private void LayoutGrid()
   {
 
-    for (int y = -gridSize.y; y <= gridSize.y; y++)
+    for (int z = -gridSize.y; z <= gridSize.y; z++)
     {
       for (int x = -gridSize.x; x <= gridSize.x; x++)
       {
-        GameObject tile = new($"Hex {x},{y}", typeof(HexRenderer));
-        tile.transform.position = Hex.ToWorld(x, y);
-        // tile.transform.position = HexUtils.HexToWorld(new Vector2Int(x, y));
-        // tile.transform.position = HexUtils2.HexToWorld(x, y);
+        GameObject tile = new($"Hex {x},{z}", typeof(HexRenderer));
+        tile.transform.position = Hex.ToWorld(x, z);
         tile.transform.SetParent(this.transform, true);
 
         HexRenderer hexRenderer = tile.GetComponent<HexRenderer>();

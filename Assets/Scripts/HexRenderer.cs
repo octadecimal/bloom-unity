@@ -9,9 +9,9 @@ public struct Face
 
   public Face(List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
   {
-    this.Vertices = vertices;
-    this.Triangles = triangles;
-    this.UVs = uvs;
+    Vertices = vertices;
+    Triangles = triangles;
+    UVs = uvs;
   }
 }
 
@@ -28,28 +28,28 @@ public class HexRenderer : MonoBehaviour
   public Material material;
   public float innerSize = 0.995f;
   public float outerSize = 1.005f;
-  public float height = 1.0f;
+  public float height = 0.0f;
 
   public void DrawMesh()
   {
-    this.DrawFaces();
-    this.CombineFaces();
+    DrawFaces();
+    CombineFaces();
   }
 
   public void DrawFaces()
   {
-    this._faces = new List<Face>();
+    _faces = new List<Face>();
 
     // Top faces.
     for (int point = 0; point < 6; point++)
     {
-      this._faces.Add(CreateFace(innerSize, outerSize, height / 2f, height / 2f, point));
+      _faces.Add(CreateFace(innerSize, outerSize, 0, 0, point));
     }
   }
 
   protected Vector3 GetPoint(float size, float height, int index)
   {
-    float angle = (60 * index) * Mathf.Deg2Rad;
+    float angle = 60 * index * Mathf.Deg2Rad;
     return new Vector3(size * Mathf.Cos(angle), height, size * Mathf.Sin(angle));
   }
 
@@ -78,50 +78,50 @@ public class HexRenderer : MonoBehaviour
     List<int> triangles = new();
     List<Vector2> uvs = new();
 
-    for (int i = 0; i < this._faces.Count; i++)
+    for (int i = 0; i < _faces.Count; i++)
     {
       // Add vertices and uvs.
-      vertices.AddRange(this._faces[i].Vertices);
-      uvs.AddRange(this._faces[i].UVs);
+      vertices.AddRange(_faces[i].Vertices);
+      uvs.AddRange(_faces[i].UVs);
 
       // Offset triangles.
       int offset = (4 * i);
-      foreach (int triangle in this._faces[i].Triangles)
+      foreach (int triangle in _faces[i].Triangles)
       {
         triangles.Add(triangle + offset);
       }
     }
 
-    this._mesh.vertices = vertices.ToArray();
-    this._mesh.triangles = triangles.ToArray();
-    this._mesh.uv = uvs.ToArray();
-    this._mesh.RecalculateNormals();
+    _mesh.vertices = vertices.ToArray();
+    _mesh.triangles = triangles.ToArray();
+    _mesh.uv = uvs.ToArray();
+    _mesh.RecalculateNormals();
   }
 
   private void Awake()
   {
-    this._meshFilter = GetComponent<MeshFilter>();
-    this._meshRenderer = GetComponent<MeshRenderer>();
+    _meshFilter = GetComponent<MeshFilter>();
+    _meshRenderer = GetComponent<MeshRenderer>();
 
-    this._mesh = new Mesh
+    _mesh = new Mesh
     {
       name = "Hex"
     };
 
-    this._meshFilter.mesh = this._mesh;
-    this._meshRenderer.material = this.material;
+    _meshFilter.mesh = _mesh;
+    _meshRenderer.material = material;
   }
 
   private void OnEnable()
   {
-    this.DrawMesh();
+    DrawMesh();
   }
 
   private void OnValidate()
   {
     if (Application.isPlaying)
     {
-      this.DrawMesh();
+      DrawMesh();
     }
   }
 
